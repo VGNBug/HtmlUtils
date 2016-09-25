@@ -1,23 +1,19 @@
 buildscript {
     ext {
-        springBootVersion = '1.4.0.M1'
+        commonsLoggingVersion = "1.1.1"
+        jUnitVersion = "4.11"
     }
     repositories {
         mavenCentral()
-        maven { url "https://repo.spring.io/snapshot" }
-        maven { url "https://repo.spring.io/milestone" }
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
 
 apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'spring-boot'
 
 jar {
-    baseName = 'com.vgen'
+    baseName = 'HtmlUtils'
     version = '0.0.1-SNAPSHOT'
 }
 sourceCompatibility = 1.8
@@ -34,9 +30,8 @@ dependencies {
     commonsLoggingVersion = "1.1.1"
     jUnitVersion = "4.11"
 
-    compile "commons-logging:commons-logging:1.1.1"
-    testCompile "junit:junit:4.11"
-
+    compile "commons-logging:commons-logging:${commonsLoggingVersion}"
+    testCompile "junit:junit:${jUnitVersion}"
 }
 
 eclipse {
@@ -58,8 +53,6 @@ task copyToLib(type: Copy) {
     into "$buildDir/lib"
     from(configurations.compile)
 }
-
-bootRepackage.enabled = false
 
 stage.dependsOn(copyToLib)
 
