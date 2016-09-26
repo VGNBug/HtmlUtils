@@ -148,6 +148,21 @@ public class HtmlUtilsTest {
         assertEquals("<p>" + TEXT + "</p>", actual);
     }
 
+    @Test
+    public void testParagraphWithClassShouldSucceed() {
+        final String actual = utils.paragraph(TEXT, attribsWithClass);
+
+        assertNotNull(actual);
+        assertEquals("<p class=\"test\">" + TEXT + "</p>", actual);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testParagraphWithHrefShouldFail() {
+        final String actual = utils.paragraph(TEXT, attribsWithHref);
+
+        assertNull(actual);
+    }
+
     private String testDivider(Map<HtmlAttribute, String> attributes) {
         return utils.divider(TEXT, attributes);
     }

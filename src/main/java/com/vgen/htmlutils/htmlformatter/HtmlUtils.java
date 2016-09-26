@@ -112,9 +112,16 @@ public class HtmlUtils {
      * @param content    The content to be wrapped.
      * @param attributes Any attributes to be added to the tag.
      * @return The wrapped content, with any attributes applied inside the opening tag.
+     * @throws IllegalArgumentException if illegal attributes are supplied to this element.
      */
-    public String paragraph(String content, Map<HtmlAttribute, String> attributes) {
-        return formatter.htmlFormat(content, "p", attributes);
+    public String paragraph(String content, Map<HtmlAttribute, String> attributes) throws IllegalArgumentException {
+        final String tag = "p";
+
+        if(! includesExcludedAttributes(attributes, commonExclusions, tag)) {
+            return formatter.htmlFormat(content, tag, attributes);
+        } else {
+            throw new IllegalArgumentException("Illegal attributes supplied to this element");
+        }
     }
 
     private boolean includesExcludedAttributes(Map<HtmlAttribute, String> attributes, List<HtmlAttribute> exclusions, String callersTag) {
