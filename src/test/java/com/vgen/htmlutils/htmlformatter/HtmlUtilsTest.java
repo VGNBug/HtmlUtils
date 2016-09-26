@@ -44,11 +44,24 @@ public class HtmlUtilsTest {
     }
 
     @Test
-    public void testFooter() {
+    public void testFooterWithNoAttributesShouldSucceed() {
         final String actual = utils.footer(TEXT, null);
 
         assertNotNull(actual);
         assertEquals("<footer>" + TEXT + "</footer>", actual);
+    }
+
+    @Test
+    public void testFooterWithClassAttributeShouldSucceed() {
+        final String actual = utils.footer(TEXT, attribsWithClass);
+
+        assertNotNull(actual);
+        assertEquals("<footer class=\"test\">" + TEXT + "</footer>", actual);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testFooterWithHrefAttributeShouldFail() {
+        assertNull(utils.footer(TEXT, attribsWithHref));
     }
 
     @Test(expected = IllegalArgumentException.class)

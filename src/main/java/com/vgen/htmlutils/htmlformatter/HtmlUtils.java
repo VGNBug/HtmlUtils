@@ -27,8 +27,10 @@ public class HtmlUtils {
      */
     public String divider(String content, Map<HtmlAttribute, String> attributes) throws IllegalArgumentException {
 
-        if(!includesExcludedAttributes(attributes, commonExclusions, "div")) {
-            return formatter.htmlFormat(content, "div", attributes);
+        final String tag = "div";
+
+        if(!includesExcludedAttributes(attributes, commonExclusions, tag)) {
+            return formatter.htmlFormat(content, tag, attributes);
         } else {
             throw new IllegalArgumentException("Illegal attributes supplied to this element");
         }
@@ -40,9 +42,16 @@ public class HtmlUtils {
      * @param content    The content to be wrapped.
      * @param attributes Any attributes to be added to the tag.
      * @return The wrapped content, with any attributes applied inside the opening tag.
+     * @throws IllegalArgumentException if illegal attributes are supplied to this element.
      */
-    public String footer(String content, Map<HtmlAttribute, String> attributes) {
-        return formatter.htmlFormat(content, "footer", attributes);
+    public String footer(String content, Map<HtmlAttribute, String> attributes) throws IllegalArgumentException {
+        final String tag = "footer";
+
+        if(! includesExcludedAttributes(attributes, commonExclusions, tag)) {
+            return formatter.htmlFormat(content, tag, attributes);
+        } else {
+            throw new IllegalArgumentException("Illegal attributes supplied to this element");
+        }
     }
 
     /**
