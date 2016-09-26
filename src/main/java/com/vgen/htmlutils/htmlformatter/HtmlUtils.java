@@ -89,7 +89,7 @@ public class HtmlUtils {
      */
     public String link(String text, String url, Map<HtmlAttribute, String> attributes) {
 
-        if (!"".equals(text) && !"".equals(url)) {
+        if (!"".equals(text) && text != null && url != null) {
             if (attributes == null) {
                 attributes = new HashMap<>();
             }
@@ -97,9 +97,9 @@ public class HtmlUtils {
             attributes.put(HtmlAttribute.HREF, url);
             return formatter.htmlFormat(text, "a", attributes);
 
-        } else if (!"".equals(text) && "".equals(url)) {
+        } else if (!"".equals(text) && text != null && ("".equals(url) || url == null)) {
             throw new IllegalArgumentException("A URL must be supplied for a link to be produced.");
-        } else if ("".equals(text) && !"".equals(url)) {
+        } else if (("".equals(text) || text == null) && !"".equals(url) && text != null) {
             throw new IllegalArgumentException("A label must be supplied for a link to be produced");
         } else {
             throw new IllegalArgumentException("Both a label and a URL must be supplied for a link to be produced");
