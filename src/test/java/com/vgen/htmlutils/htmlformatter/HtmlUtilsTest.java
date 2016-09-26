@@ -12,6 +12,7 @@ public class HtmlUtilsTest {
 
     private HtmlUtils utils;
     private final String TEXT = "Hello world!";
+    public static final String URL = "https://www.example.com";
     private Map<HtmlAttribute, String> attribsWithClass = new HashMap<>();
     private Map<HtmlAttribute, String> attribsWithHref = new HashMap<>();
 
@@ -19,7 +20,7 @@ public class HtmlUtilsTest {
     public void setup() {
         utils = new HtmlUtils();
         attribsWithClass.put(HtmlAttribute.CLASS, "test");
-        attribsWithHref.put(HtmlAttribute.HREF, "https://www.example.com");
+        attribsWithHref.put(HtmlAttribute.HREF, URL);
     }
 
     @Test
@@ -112,16 +113,31 @@ public class HtmlUtilsTest {
 
     @Test
     public void testLink() {
-        final String url = "https://www.example.com";
-        final String actual = utils.link(TEXT, url, null);
+        final String actual = utils.link(TEXT, URL, null);
 
         assertNotNull(actual);
-        assertEquals("<a href=\"" + url + "\">" + TEXT + "</a>", actual);
+        assertEquals("<a href=\"" + URL + "\">" + TEXT + "</a>", actual);
+    }
+
+    @Test
+    public void testLinkWithClassShouldSucceed() {
+        Map<HtmlAttribute, String> attribs = attribsWithHref;
+        attribs.put(HtmlAttribute.CLASS, "test");
+
+        final String actual = utils.link(TEXT, URL, attribs);
+
+        assertNotNull(actual);
+        assertEquals("<a class=\"test\" href=\"" + URL + "\">" + TEXT + "</a>", actual);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testLinkNoUrlShouldFail() {
         assertNull(utils.link(TEXT, null, null));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testLinkNoLabelShouldFail() {
+        assertNull(utils.link(null, URL, null));
     }
 
     @Test
