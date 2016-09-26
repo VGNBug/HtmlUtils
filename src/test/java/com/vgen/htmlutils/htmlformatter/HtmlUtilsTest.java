@@ -66,37 +66,48 @@ public class HtmlUtilsTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testHeadingSize0ShouldFail() {
-        testHeadingForFailure(0);
+        testHeadingForFailure(0, null);
     }
 
     @Test
     public void testHeadingSize1ShouldSucceed() {
-        testHeadingForSuccess(1);
+        testHeadingForSuccess(1, null, "<h1>" + TEXT + "</h1>");
     }
 
     @Test
     public void testHeadingSize2ShouldSucceed() {
-        testHeadingForSuccess(2);
+        testHeadingForSuccess(2, null, "<h2>" + TEXT + "</h2>");
     }
 
     @Test
     public void testHeadingSize3ShouldSucceed() {
-        testHeadingForSuccess(3);
+        testHeadingForSuccess(3, null, "<h3>" + TEXT + "</h3>");
     }
 
     @Test
     public void testHeadingSize4ShouldSucceed() {
-        testHeadingForSuccess(4);
+
+        testHeadingForSuccess(4, null, "<h4>" + TEXT + "</h4>");
     }
 
     @Test
     public void testHeadingSize5ShouldSucceed() {
-        testHeadingForSuccess(5);
+        testHeadingForSuccess(5, null, "<h5>" + TEXT + "</h5>");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testHeadingSize6ShouldFail() {
-        testHeadingForFailure(6);
+        testHeadingForFailure(6, null);
+    }
+
+    @Test
+    public void testHeadingWithClassAttributeShouldSucceed() {
+        testHeadingForSuccess(1, attribsWithClass, "<h1 class=\"test\">" + TEXT + "</h1>");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testHeadingWithHrefAttributeShouldFail() {
+        testHeadingForFailure(1, attribsWithHref);
     }
 
     @Test
@@ -120,15 +131,15 @@ public class HtmlUtilsTest {
         return utils.divider(TEXT, attributes);
     }
 
-    private void testHeadingForSuccess(int size) {
-        final String actual = utils.heading(TEXT, null, size);
+    private void testHeadingForSuccess(int size, Map<HtmlAttribute, String> attributes, String expected) {
+        final String actual = utils.heading(TEXT, attributes, size);
 
         assertNotNull(actual);
-        assertEquals("<h" + size + ">" + TEXT + "</h" + size + ">", actual);
+        assertEquals(expected, actual);
     }
 
-    private void testHeadingForFailure(int size) {
-        final String actual = utils.heading(TEXT, null, size);
+    private void testHeadingForFailure(int size, Map<HtmlAttribute, String> attributes) {
+        final String actual = utils.heading(TEXT, attributes, size);
 
         assertNull(actual);
     }

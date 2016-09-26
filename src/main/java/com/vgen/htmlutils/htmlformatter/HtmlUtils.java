@@ -61,13 +61,20 @@ public class HtmlUtils {
      * @param attributes Any attributes to be added to the tag.
      * @param size       The size of the heading to be created, between 1 and 5.
      * @return The wrapped content, with any attributes applied inside the opening tag.
-     * @throws IllegalArgumentException if an invalid heading size is supplied.
+     * @throws IllegalArgumentException if an invalid heading size is supplied, or if illegal attributes are supplied
+     * to this element
      */
     public String heading(String content, Map<HtmlAttribute, String> attributes, int size) throws IllegalArgumentException {
-        if (size >= 1 && size <= 5) {
-            return formatter.htmlFormat(content, "h" + size, attributes);
+        final String tag = "h";
+
+        if(! includesExcludedAttributes(attributes, commonExclusions, tag)) {
+            if (size >= 1 && size <= 5) {
+                return formatter.htmlFormat(content, tag + size, attributes);
+            } else {
+                throw new IllegalArgumentException("Heading size must be between 1 and 5");
+            }
         } else {
-            throw new IllegalArgumentException("Heading size must be between 1 and 5");
+            throw new IllegalArgumentException("Illegal attributes supplied to this element");
         }
     }
 
