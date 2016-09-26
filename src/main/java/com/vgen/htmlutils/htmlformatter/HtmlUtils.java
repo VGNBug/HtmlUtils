@@ -1,6 +1,8 @@
 package com.vgen.htmlutils.htmlformatter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -9,6 +11,11 @@ import java.util.Map;
 public class HtmlUtils {
 
     private ContentFormatter formatter = new ContentFormatter();
+    private List<HtmlAttribute> commonExclusions = new ArrayList<>();
+
+    public HtmlUtils() {
+        commonExclusions.add(HtmlAttribute.HREF);
+    }
 
     /**
      * Creates a section.
@@ -16,9 +23,15 @@ public class HtmlUtils {
      * @param content    The content to be wrapped.
      * @param attributes Any attributes to be added to the tag.
      * @return The wrapped content, with any attributes applied inside the opening tag.
+     * @throws IllegalArgumentException if illegal attributes are supplied to this element.
      */
-    public String divider(String content, Map<HtmlAttribute, String> attributes) {
-        return formatter.htmlFormat(content, "div", attributes);
+    public String divider(String content, Map<HtmlAttribute, String> attributes) throws IllegalArgumentException {
+
+        if(!includesExcludedAttributes(attributes, commonExclusions, "div")) {
+            return formatter.htmlFormat(content, "div", attributes);
+        } else {
+            throw new IllegalArgumentException("Illegal attributes supplied to this element");
+        }
     }
 
     /**
@@ -52,8 +65,8 @@ public class HtmlUtils {
     /**
      * Creates a clickable link.
      *
-     * @param text The label text for the link.
-     * @param url The URL to which the link will direct the browser.
+     * @param text       The label text for the link.
+     * @param url        The URL to which the link will direct the browser.
      * @param attributes Any attributes to be added to the tag.
      * @return The wrapped content, with any attributes applied inside the opening tag.
      * @throws IllegalArgumentException if either text or url is null.
@@ -61,7 +74,7 @@ public class HtmlUtils {
     public String link(String text, String url, Map<HtmlAttribute, String> attributes) {
 
         if (!"".equals(text) && !"".equals(url)) {
-            if(attributes == null){
+            if (attributes == null) {
                 attributes = new HashMap<>();
             }
 
@@ -88,4 +101,21 @@ public class HtmlUtils {
         return formatter.htmlFormat(content, "p", attributes);
     }
 
+    private boolean includesExcludedAttributes(Map<HtmlAttribute, String> attributes, List<HtmlAttribute> exclusions, String callersTag) {
+
+        boolean doesIncludeExcludedAttributes = false;
+
+        if(attributes != null && exclusions != null) {
+            for (Map.Entry<HtmlAttribute, String> attribute : attributes.entrySet()) {
+                for (HtmlAttribute exclusion : exclusions) {
+                    if (attribute.getKey().getFriendlyName().equals(exclusion.getFriendlyName())) {
+                        throw new IllegalArgumentException(attribute.getKey().getFriendlyName() +
+                                " is not an acceptable attribute for a <" + callersTag + "> element");
+                    }
+                }
+            }
+        }
+
+        return doesIncludeExcludedAttributes;
+    }
 }

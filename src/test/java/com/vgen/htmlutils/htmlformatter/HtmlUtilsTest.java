@@ -2,28 +2,45 @@ package com.vgen.htmlutils.htmlformatter;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.omg.PortableServer.ID_ASSIGNMENT_POLICY_ID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.junit.Assert.*;
 
 public class HtmlUtilsTest {
 
     private HtmlUtils utils;
-    final String TEXT = "Hello world!";
+    private final String TEXT = "Hello world!";
+    private Map<HtmlAttribute, String> attribsWithClass = new HashMap<>();
+    private Map<HtmlAttribute, String> attribsWithHref = new HashMap<>();
 
     @Before
     public void setup() {
         utils = new HtmlUtils();
+        attribsWithClass.put(HtmlAttribute.CLASS, "test");
+        attribsWithHref.put(HtmlAttribute.HREF, "https://www.example.com");
     }
 
     @Test
-    public void testDivider() {
-        final String actual = utils.divider(TEXT, null);
+    public void testDividerNoAttributesShouldSucceed() {
+        final String actual = testDivider(null);
 
         assertNotNull(actual);
         assertEquals("<div>" + TEXT + "</div>", actual);
+    }
+
+    @Test
+    public void testDividerWithClassAttributeShouldSucceed() {
+        final String actual = testDivider(attribsWithClass);
+
+        assertNotNull(actual);
+        assertEquals("<div class=\"test\">" + TEXT + "</div>", actual);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testDividerWithHrefAttributeShouldFail() {
+        assertNull(testDivider(attribsWithHref));
     }
 
     @Test
@@ -84,6 +101,10 @@ public class HtmlUtilsTest {
 
         assertNotNull(actual);
         assertEquals("<p>" + TEXT + "</p>", actual);
+    }
+
+    private String testDivider(Map<HtmlAttribute, String> attributes) {
+        return utils.divider(TEXT, attributes);
     }
 
     private void testHeadingForSuccess(int size) {
