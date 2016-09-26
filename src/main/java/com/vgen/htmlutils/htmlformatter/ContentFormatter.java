@@ -13,11 +13,11 @@ class ContentFormatter {
 
     private final Log LOGGER = LogFactory.getLog(this.getClass());
 
-    public String htmlFormat(String content, String tag, Map<String, String> attributes) {
+    public String htmlFormat(String content, String tag, Map<HtmlAttribute, String> attributes) {
 
         String output = "";
 
-        if ("".equals(tag)) {
+        if (!"".equals(tag)) {
             output += formatOpenTag(tag, attributes) + content + formatCloseTag(tag);
         } else {
             throw new IllegalArgumentException("tag attribute cannot be null");
@@ -26,18 +26,17 @@ class ContentFormatter {
         return output;
     }
 
-    private String formatOpenTag(String tag, Map<String, String> attributes) {
+    private String formatOpenTag(String tag, Map<HtmlAttribute, String> attributes) {
 
         String output = "";
 
-        if ("".equals(tag)) {
-            output += "<" + tag + " ";
+        if (!"".equals(tag)) {
+            output += "<" + tag;
 
-            Iterator it = attributes.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry pair = (Map.Entry) it.next();
-                output += pair.getKey() + "=\"" + pair.getValue() + "\" ";
-                it.remove(); // avoids a ConcurrentModificationException
+            if(attributes != null && attributes.size() > 0) {
+                for (Map.Entry<HtmlAttribute, String> entry : attributes.entrySet()) {
+                    output += " " + entry.getKey().getFriendlyName() + "=\"" + entry.getValue() + "\"";
+                }
             }
 
             output += ">";
