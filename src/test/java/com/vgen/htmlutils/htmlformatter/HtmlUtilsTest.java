@@ -127,7 +127,7 @@ public class HtmlUtilsTest {
         final String actual = utils.link(TEXT, URL, attribs);
 
         assertNotNull(actual);
-        assertEquals("<a class=\"test\" href=\"" + URL + "\">" + TEXT + "</a>", actual);
+        assertEquals("<a href=\"" + URL + "\" class=\"test\">" + TEXT + "</a>", actual);
     }
 
     @Test(expected = IllegalArgumentException.class)
